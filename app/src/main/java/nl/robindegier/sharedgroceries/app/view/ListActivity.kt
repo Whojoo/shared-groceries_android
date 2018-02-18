@@ -1,4 +1,4 @@
-package nl.robindegier.sharedgroceries.app
+package nl.robindegier.sharedgroceries.app.view
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.Menu
 import android.view.MenuItem
+import nl.robindegier.sharedgroceries.app.R
 
 class ListActivity : AppCompatActivity() {
 
