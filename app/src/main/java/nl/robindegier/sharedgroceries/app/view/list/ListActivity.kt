@@ -46,7 +46,9 @@ class ListActivity : AppCompatActivity() {
 
         return if (id == R.id.action_settings) {
             true
-        } else super.onOptionsItemSelected(item)
+        } else {
+            super.onOptionsItemSelected(item)
+        }
 
     }
 }

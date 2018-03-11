@@ -1,7 +1,10 @@
 package nl.robindegier.sharedgroceries.app.di
 
+import android.content.Context
 import nl.robindegier.sharedgroceries.app.service.impl.NetworkServiceImpl
 import nl.robindegier.sharedgroceries.app.service.NetworkService
+import nl.robindegier.sharedgroceries.app.service.TokenService
+import nl.robindegier.sharedgroceries.app.service.impl.TokenServiceImpl
 import nl.robindegier.sharedgroceries.app.util.StringProvider
 import nl.robindegier.sharedgroceries.app.view.googlelogin.GoogleLoginPresenterImpl
 import nl.robindegier.sharedgroceries.app.view.googlelogin.GoogleLoginPresenter
@@ -19,15 +22,17 @@ class Modules {
     }
 
     private val networkModule: Module = applicationContext {
-        bean { NetworkServiceImpl() as NetworkService }
+        factory { NetworkServiceImpl() as NetworkService }
+        factory { TokenServiceImpl(get()) as TokenService }
     }
 
     private val mvpModule: Module = applicationContext {
-        bean { GoogleLoginPresenterImpl(get(), get()) as GoogleLoginPresenter }
+        factory { GoogleLoginPresenterImpl(get(), get(), get()) as GoogleLoginPresenter }
     }
 
     private val utilModule: Module = applicationContext {
         factory { StringProvider(get()) }
+        bean { get<Context>().getSharedPreferences("shared-groceries", Context.MODE_PRIVATE) }
     }
 
     fun getModules(): List<Module> {

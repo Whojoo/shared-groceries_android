@@ -8,6 +8,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import nl.robindegier.sharedgroceries.app.service.NetworkService
+import nl.robindegier.sharedgroceries.app.service.TokenService
 import nl.robindegier.sharedgroceries.app.view.googlelogin.GoogleLoginPresenter.Companion.RC_GOOGLE_SIGN_IN
 import timber.log.Timber
 
@@ -15,7 +16,8 @@ import timber.log.Timber
  * Created by robindegier on 18/02/2018.
  * Copyright © 2018 DearNova. All rights reserved.
  */
-class GoogleLoginPresenterImpl(private val networkService: NetworkService, private val googleClientId: String) : GoogleLoginPresenter {
+class GoogleLoginPresenterImpl(private val networkService: NetworkService, private val googleClientId: String,
+                               private val tokenService: TokenService) : GoogleLoginPresenter {
     private var view: GoogleLoginView? = null
     private var googleSignInClient: GoogleSignInClient? = null
 
@@ -66,7 +68,10 @@ class GoogleLoginPresenterImpl(private val networkService: NetworkService, priva
             networkService.verifyToken(it.idToken!!)
         }?.subscribe({ result ->
             when (result) {
-                NetworkService.VERIFY_SUCCESS -> view!!.goToList()
+                NetworkService.VERIFY_SUCCESS -> {
+                    tokenService.token = account.idToken!!
+                    view!!.goToList()
+                }
                 NetworkService.VERIFY_FAILED -> view!!.showVerifyFailed()
                 NetworkService.VERIFY_ERROR -> view!!.showVerifyError()
             }
