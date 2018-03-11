@@ -5,4 +5,5 @@ package nl.robindegier.sharedgroceries.app.service
  * Copyright © 2018 DearNova. All rights reserved.
  */
 interface NetworkService {
+    fun verifyToken(idToken: String)
 }

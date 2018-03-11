@@ -1,6 +1,9 @@
 package nl.robindegier.sharedgroceries.app
 
 import android.app.Application
+import com.androidnetworking.AndroidNetworking
+import com.jacksonandroidnetworking.JacksonParserFactory
+import nl.robindegier.sharedgroceries.app.di.Modules
 import nl.robindegier.sharedgroceries.app.di.mvpModule
 import nl.robindegier.sharedgroceries.app.di.networkModule
 import nl.robindegier.sharedgroceries.app.di.secretModule
@@ -19,6 +22,9 @@ class Application : Application() {
 
         Timber.plant(Timber.DebugTree())
 
-        startKoin(this, listOf(networkModule, mvpModule, secretModule))
+        startKoin(this, Modules().getModules())
+
+        AndroidNetworking.initialize(applicationContext)
+        AndroidNetworking.setParserFactory(JacksonParserFactory())
     }
 }

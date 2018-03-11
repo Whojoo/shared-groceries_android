@@ -23,7 +23,6 @@ class GoogleLoginPresenterImpl(private val networkService: NetworkService, priva
         this.view = view
 
         val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestId()
                 .requestIdToken(googleClientId)
                 .build()
 
@@ -65,6 +64,7 @@ class GoogleLoginPresenterImpl(private val networkService: NetworkService, priva
     private fun handleAccount(account: GoogleSignInAccount?) {
         account?.let {
             Timber.i("Sending sign in info over network with token id ${it.idToken}")
+            networkService.verifyToken(it.idToken!!)
         }
     }
 }
