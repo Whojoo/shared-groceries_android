@@ -22,6 +22,7 @@ class Application : Application() {
         startKoin(this, Modules().getModules())
 
         AndroidNetworking.initialize(applicationContext)
+
         AndroidNetworking.setParserFactory(JacksonParserFactory())
     }
 }

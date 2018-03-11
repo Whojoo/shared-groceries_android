@@ -3,10 +3,11 @@ package nl.robindegier.sharedgroceries.app.service.impl
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.androidnetworking.interfaces.OkHttpResponseListener
+import nl.robindegier.sharedgroceries.app.BuildConfig
 import nl.robindegier.sharedgroceries.app.dto.GoogleSignInTokenDto
 import nl.robindegier.sharedgroceries.app.service.NetworkService
-import org.json.JSONObject
+import okhttp3.Response
 import timber.log.Timber
 
 /**
@@ -16,17 +17,17 @@ import timber.log.Timber
 class NetworkServiceImpl : NetworkService {
     override fun verifyToken(idToken: String) {
         val body = GoogleSignInTokenDto(idToken, "unknown")
-        AndroidNetworking.post("192.168.2.5:5000/oauth/google")
-                .addBodyParameter(body)
+        AndroidNetworking.post("${BuildConfig.SERVER_URL}/oauth/google")
                 .setPriority(Priority.HIGH)
+                .addApplicationJsonBody(body)
                 .build()
-                .getAsJSONObject(object: JSONObjectRequestListener {
-                    override fun onResponse(response: JSONObject?) {
+                .getAsOkHttpResponse(object : OkHttpResponseListener {
+                    override fun onResponse(response: Response?) {
                         Timber.d("response")
                     }
 
                     override fun onError(anError: ANError?) {
-                        Timber.d("error")
+                        Timber.e(anError?.cause, "error ${anError?.errorBody}")
                     }
                 })
     }

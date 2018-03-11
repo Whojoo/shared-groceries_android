@@ -15,7 +15,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField "String", "SERVER_URL", '"http://10.0.2.2:5000"'
+        }
         release {
+            buildConfigField "String", "SERVER_URL", '"https://api.shared-groceries.com"'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
