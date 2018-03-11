@@ -2,10 +2,12 @@ package nl.robindegier.sharedgroceries.app.view.googlelogin
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import com.google.android.gms.common.SignInButton
 import kotlinx.android.synthetic.main.activity_google_login.*
 import nl.robindegier.sharedgroceries.app.R
+import nl.robindegier.sharedgroceries.app.view.list.listActivityIntent
 import org.koin.android.ext.android.inject
 
 class GoogleLoginActivity : AppCompatActivity(), GoogleLoginView {
@@ -43,5 +45,17 @@ class GoogleLoginActivity : AppCompatActivity(), GoogleLoginView {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detach()
+    }
+
+    override fun goToList() {
+        startActivity(listActivityIntent())
+    }
+
+    override fun showVerifyFailed() {
+        Snackbar.make(sign_in_button, "Verify failed", Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun showVerifyError() {
+        Snackbar.make(sign_in_button, "Verify Error", Snackbar.LENGTH_SHORT).show()
     }
 }

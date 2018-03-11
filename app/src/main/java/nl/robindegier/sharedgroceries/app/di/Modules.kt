@@ -14,8 +14,8 @@ import org.koin.dsl.module.applicationContext
  * Copyright © 2018 DearNova. All rights reserved.
  */
 class Modules {
-    private val secretModule : Module = applicationContext {
-        bean (DiConstants.GOOGLE_CLIENT_ID) { StringProvider(get()).googleClientId() }
+    private val secretModule: Module = applicationContext {
+        factory (DiConstants.GOOGLE_CLIENT_ID) { get<StringProvider>().googleClientId() }
     }
 
     private val networkModule: Module = applicationContext {
@@ -26,7 +26,11 @@ class Modules {
         bean { GoogleLoginPresenterImpl(get(), get()) as GoogleLoginPresenter }
     }
 
+    private val utilModule: Module = applicationContext {
+        factory { StringProvider(get()) }
+    }
+
     fun getModules(): List<Module> {
-        return listOf(secretModule, networkModule, mvpModule)
+        return listOf(secretModule, networkModule, mvpModule, utilModule)
     }
 }

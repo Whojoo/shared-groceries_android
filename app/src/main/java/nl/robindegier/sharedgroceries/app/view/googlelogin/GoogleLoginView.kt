@@ -11,4 +11,10 @@ interface GoogleLoginView {
     fun context() : Context
 
     fun startForResult(intent: Intent, requestCode: Int)
+
+    fun goToList()
+
+    fun showVerifyFailed()
+
+    fun showVerifyError()
 }

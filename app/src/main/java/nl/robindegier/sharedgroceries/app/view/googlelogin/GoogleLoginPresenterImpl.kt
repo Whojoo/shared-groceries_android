@@ -63,8 +63,16 @@ class GoogleLoginPresenterImpl(private val networkService: NetworkService, priva
 
     private fun handleAccount(account: GoogleSignInAccount?) {
         account?.let {
-            Timber.i("Sending sign in info over network with token id ${it.idToken}")
             networkService.verifyToken(it.idToken!!)
-        }
+        }?.subscribe({ result ->
+            when (result) {
+                NetworkService.VERIFY_SUCCESS -> view!!.goToList()
+                NetworkService.VERIFY_FAILED -> view!!.showVerifyFailed()
+                NetworkService.VERIFY_ERROR -> view!!.showVerifyError()
+            }
+        }, {
+            Timber.e(it, "Unknown Error occurred")
+            view!!.showVerifyError()
+        })
     }
 }

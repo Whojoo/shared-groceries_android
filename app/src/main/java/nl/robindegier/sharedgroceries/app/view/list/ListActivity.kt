@@ -1,5 +1,7 @@
 package nl.robindegier.sharedgroceries.app.view.list
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -9,6 +11,10 @@ import android.view.View
 import android.view.Menu
 import android.view.MenuItem
 import nl.robindegier.sharedgroceries.app.R
+
+fun Context.listActivityIntent(): Intent {
+    return Intent(this, ListActivity::class.java)
+}
 
 class ListActivity : AppCompatActivity() {
 
