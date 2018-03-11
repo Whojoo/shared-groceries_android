@@ -4,9 +4,6 @@ import android.app.Application
 import com.androidnetworking.AndroidNetworking
 import com.jacksonandroidnetworking.JacksonParserFactory
 import nl.robindegier.sharedgroceries.app.di.Modules
-import nl.robindegier.sharedgroceries.app.di.mvpModule
-import nl.robindegier.sharedgroceries.app.di.networkModule
-import nl.robindegier.sharedgroceries.app.di.secretModule
 import org.koin.android.ext.android.startKoin
 import timber.log.Timber
 
