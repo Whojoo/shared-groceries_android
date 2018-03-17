@@ -1,6 +1,7 @@
 package nl.robindegier.sharedgroceries.app.service
 
 import io.reactivex.Single
+import nl.robindegier.sharedgroceries.app.dto.JwtDto
 
 /**
  * Created by robindegier on 18/02/2018.
@@ -14,4 +15,6 @@ interface NetworkService {
     }
 
     fun verifyToken(idToken: String) : Single<Int>
+
+    fun googleLogin(idToken: String): Single<JwtDto>
 }

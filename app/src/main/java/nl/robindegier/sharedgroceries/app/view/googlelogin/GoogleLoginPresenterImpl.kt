@@ -7,6 +7,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import nl.robindegier.sharedgroceries.app.exception.UnauthorizedException
 import nl.robindegier.sharedgroceries.app.service.NetworkService
 import nl.robindegier.sharedgroceries.app.service.TokenService
 import nl.robindegier.sharedgroceries.app.view.googlelogin.GoogleLoginPresenter.Companion.RC_GOOGLE_SIGN_IN
@@ -64,20 +65,18 @@ class GoogleLoginPresenterImpl(private val networkService: NetworkService, priva
     }
 
     private fun handleAccount(account: GoogleSignInAccount?) {
-        account?.let {
-            networkService.verifyToken(it.idToken!!)
-        }?.subscribe({ result ->
-            when (result) {
-                NetworkService.VERIFY_SUCCESS -> {
-                    tokenService.token = account.idToken!!
-                    view!!.goToList()
-                }
-                NetworkService.VERIFY_FAILED -> view!!.showVerifyFailed()
-                NetworkService.VERIFY_ERROR -> view!!.showVerifyError()
+        account?.let { googleAccount ->
+            networkService.googleLogin(googleAccount.idToken!!)
+        }?.subscribe({ jwt ->
+            tokenService.token = jwt.token
+            view!!.goToList()
+        }, { error ->
+            Timber.e(error, "Error occurred")
+            if (error is UnauthorizedException) {
+                view!!.showVerifyFailed()
+            } else {
+                view!!.showVerifyError()
             }
-        }, {
-            Timber.e(it, "Unknown Error occurred")
-            view!!.showVerifyError()
         })
     }
 }
