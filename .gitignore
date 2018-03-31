@@ -9,3 +9,4 @@
 .externalNativeBuild
 *.jar
 secrets.xml
+keystore.properties

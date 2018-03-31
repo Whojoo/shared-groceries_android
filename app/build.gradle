@@ -3,7 +3,25 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+
+// Load your keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+    signingConfigs {
+        debug_sign {
+            keyAlias keystoreProperties['debugKeyAlias']
+            keyPassword keystoreProperties['debugKeyPassword']
+            storePassword keystoreProperties['debugStorePassword']
+            storeFile file(keystoreProperties['debugStoreFile'])
+        }
+    }
     compileSdkVersion 27
     buildToolsVersion "27.0.3"
     defaultConfig {
@@ -16,7 +34,8 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "SERVER_URL", '"http://10.0.2.2:8000"'
+            buildConfigField "String", "SERVER_URL", '"http://192.168.2.5:8000"'
+            signingConfig signingConfigs.debug_sign
         }
         release {
             buildConfigField "String", "SERVER_URL", '"https://api.shared-groceries.com"'
@@ -31,12 +50,12 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$android_support_version"
     implementation "com.android.support:design:$android_support_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.android.support.constraint:constraint-layout:1.0.2"
-    implementation "org.koin:koin-android:0.9.0"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'org.koin:koin-android:0.9.0'
     implementation "com.amitshekhar.android:android-networking:$network_version"
     implementation "com.amitshekhar.android:jackson-android-networking:$network_version"
     implementation 'com.jakewharton.timber:timber:4.6.1'
@@ -45,9 +64,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:11.8.0'
     implementation "com.jakewharton:butterknife:$butterknife_version"
     kapt "com.jakewharton:butterknife-compiler:$butterknife_version"
-
-
-    testImplementation "junit:junit:4.12"
+    testImplementation 'junit:junit:4.12'
     androidTestImplementation("com.android.support.test.espresso:espresso-core:2.2.2", {
         exclude group: "com.android.support", module: "support-annotations"
     })
